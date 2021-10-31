@@ -4,7 +4,6 @@ When I load a GeoTIFF into [OpenLayers](https://openlayers.org/en/latest/example
 
 To my understanding, this is understandable, since the prerenderer does not have a browser module FS ...
 ## Steps
-git clone
 
  1. git clone [REPO]
  2. npm install
