@@ -3,11 +3,11 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "fe": {
+    "angular.io-example": {
       "projectType": "application",
       "schematics": {
-        "@schematics/angular:component": {
-          "style": "scss"
+        "@schematics/angular:application": {
+          "strict": true
         }
       },
       "root": "",
@@ -17,115 +17,69 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/fe/browser",
+            "outputPath": "dist/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets/cesium",
-                "output": "/assets/cesium"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src",
-                "output": "/"
-              },
-              {
-                "glob": "robots.txt",
-                "input": "src",
-                "output": "/"
-              },
-              {
-                "glob": "sitemap.xml",
-                "input": "src",
-                "output": "/"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
-            "scripts": [
-              "node_modules/hammerjs/hammer.min.js"
+            "styles": [
+              "src/styles.css"
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "src",
-                "src/styles"
-              ]
-            },
-            "aot": true,
-            "vendorChunk": true,
-            "extractLicenses": false,
-            "buildOptimizer": false,
-            "sourceMap": true,
-            "optimization": false,
-            "namedChunks": true
+            "scripts": []
           },
           "configurations": {
-            "dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ]
-            },
             "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": false,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "10mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
-                }
-              ]
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "fe:build",
-            "port": 3000
-          },
           "configurations": {
-            "dev": {
-              "browserTarget": "fe:build:dev"
-            },
             "production": {
-              "browserTarget": "fe:build:production"
+              "browserTarget": "angular.io-example:build:production"
+            },
+            "development": {
+              "browserTarget": "angular.io-example:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "fe:build"
+            "browserTarget": "angular.io-example:build"
           }
         },
         "test": {
@@ -136,52 +90,25 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets"
-              },
-              {
-                "glob": "**/*",
-                "input": "./node_modules/cesium/Build/Cesium",
-                "output": "./assets/cesium"
-              },
-              {
-                "glob": "favicon.ico",
-                "input": "src",
-                "output": "/"
-              },
-              {
-                "glob": "robots.txt",
-                "input": "src",
-                "output": "/"
-              },
-              {
-                "glob": "sitemap.xml",
-                "input": "src",
-                "output": "/"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
-            "scripts": [
-              "node_modules/hammerjs/hammer.min.js"
+            "styles": [
+              "src/styles.css"
             ],
-            "stylePreprocessorOptions": {
-              "includePaths": [
-                "node_modules",
-                "src",
-                "src/styles"
-              ]
-            }
+            "scripts": []
           }
         },
         "lint": {
-          "builder": "@angular-eslint/builder:lint",
+          "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "e2e/**/*.ts",
-              "*.ts",
-              "src/**/*.html"
+            "tsConfig": [
+              "tsconfig.app.json",
+              "tsconfig.spec.json",
+              "e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
             ]
           }
         },
@@ -189,36 +116,22 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "fe:serve"
+            "devServerTarget": "angular.io-example:serve"
           },
           "configurations": {
-            "dev": {
-              "devServerTarget": "fe:serve:dev"
-            },
             "production": {
-              "devServerTarget": "fe:serve:production"
+              "devServerTarget": "angular.io-example:serve:production"
             }
           }
         },
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/fe/server",
+            "outputPath": "dist/server",
             "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "sourceMap": false,
-            "optimization": false
+            "tsConfig": "tsconfig.server.json"
           },
           "configurations": {
-            "dev": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ],
-              "optimization": true
-            },
             "production": {
               "outputHashing": "media",
               "fileReplacements": [
@@ -226,58 +139,51 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.prod.ts"
                 }
-              ],
-              "sourceMap": false,
-              "optimization": {
-                "scripts": false,
-                "styles": true
-              }
+              ]
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true,
+              "extractLicenses": false
             }
           },
-          "defaultConfiguration": ""
+          "defaultConfiguration": "production"
         },
         "serve-ssr": {
           "builder": "@nguniversal/builders:ssr-dev-server",
-          "options": {
-            "browserTarget": "fe:build",
-            "serverTarget": "fe:server"
-          },
           "configurations": {
-            "dev": {
-              "browserTarget": "fe:build:dev",
-              "serverTarget": "fe:server:dev"
+            "development": {
+              "browserTarget": "angular.io-example:build:development",
+              "serverTarget": "angular.io-example:server:development"
             },
             "production": {
-              "browserTarget": "fe:build:production",
-              "serverTarget": "fe:server:production"
+              "browserTarget": "angular.io-example:build:production",
+              "serverTarget": "angular.io-example:server:production"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "prerender": {
           "builder": "@nguniversal/builders:prerender",
           "options": {
-            "browserTarget": "fe:build",
-            "serverTarget": "fe:server",
             "routes": [
               "/"
             ]
           },
           "configurations": {
-            "dev": {
-              "browserTarget": "fe:build:dev",
-              "serverTarget": "fe:server:dev"
-            },
             "production": {
-              "browserTarget": "fe:build:production",
-              "serverTarget": "fe:server:production"
+              "browserTarget": "angular.io-example:build:production",
+              "serverTarget": "angular.io-example:server:production"
+            },
+            "development": {
+              "browserTarget": "angular.io-example:build:development",
+              "serverTarget": "angular.io-example:server:development"
             }
-          }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
   },
-  "defaultProject": "fe",
-  "cli": {
-    "defaultCollection": "@angular-eslint/schematics"
-  }
+  "defaultProject": "angular.io-example"
 }
