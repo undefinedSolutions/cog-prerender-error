@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CogComponent } from './cog/cog.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CogComponent
+    AppComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'fe' }), // this should always be first
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
